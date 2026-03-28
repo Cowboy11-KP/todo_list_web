@@ -1,0 +1,318 @@
+:root {
+  --lumina-teal: #006054;
+  --lumina-teal-hover: #004d43;
+  --bg-light: #eff4f2;
+  --card-bg: #ffffff;
+  --text-main: #1d2120;
+  --text-muted: #6b7571;
+  --border-light: #e5ebe9;
+  --input-bg: #f3f6f5;
+  --radius-xl: 32px;
+  --radius-lg: 16px;
+  --radius-md: 8px;
+}
+
+.lumina-container {
+  min-height: 100vh;
+  background: var(--bg-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-family: 'Inter', 'Outfit', sans-serif;
+  color: var(--text-main);
+  background-image: radial-gradient(circle at 15% 15%, rgba(0, 96, 84, 0.05), transparent 30%),
+                    radial-gradient(circle at 85% 85%, rgba(0, 96, 84, 0.05), transparent 40%);
+}
+
+.lumina-layout {
+  display: flex;
+  width: 100%;
+  max-width: 1100px;
+  gap: 4rem;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .lumina-layout {
+    flex-direction: column;
+    gap: 3rem;
+  }
+}
+
+/* LEFT SIDE - BRANDING */
+.lumina-branding {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.lumina-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.lumina-logo-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--lumina-teal);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.lumina-logo-icon::before {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--lumina-teal), 0 0 0 4px white;
+}
+
+.lumina-logo-icon::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px dashed rgba(255,255,255,0.7);
+  border-radius: 50%;
+}
+
+.lumina-title {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-top: 1.5rem;
+}
+
+.lumina-title em {
+  color: var(--lumina-teal);
+  font-style: italic;
+}
+
+.lumina-subtitle {
+  font-size: 1.125rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 400px;
+  margin-bottom: 1.5rem;
+}
+
+.lumina-features {
+  display: flex;
+  gap: 1rem;
+}
+
+.lumina-feature-card {
+  background: rgba(255, 255, 255, 0.4);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.lumina-feature-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.lumina-feature-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.lumina-feature-desc {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-main);
+}
+
+/* RIGHT SIDE - FORM */
+.lumina-form-container {
+  flex: 0 0 440px;
+  background: var(--card-bg);
+  padding: 3.5rem;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+}
+
+.lumina-form-header {
+  margin-bottom: 2rem;
+}
+
+.lumina-form-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.lumina-form-header p {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+}
+
+.lumina-form-group {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.lumina-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lumina-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.lumina-forgot {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--lumina-teal);
+  text-decoration: none;
+}
+
+.lumina-input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: var(--input-bg);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  color: var(--text-main);
+  outline: none;
+  transition: all 0.2s;
+}
+
+.lumina-input::placeholder {
+  color: #aeb6b3;
+}
+
+.lumina-input:focus {
+  border-color: rgba(0, 96, 84, 0.3);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(0, 96, 84, 0.05);
+}
+
+.lumina-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.lumina-checkbox input {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--lumina-teal);
+  cursor: pointer;
+}
+
+.lumina-btn-main {
+  width: 100%;
+  padding: 1rem;
+  background: var(--lumina-teal);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lumina-btn-main:hover {
+  background: var(--lumina-teal-hover);
+}
+
+.lumina-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 2rem 0;
+  color: #aeb6b3;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.lumina-divider::before,
+.lumina-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.lumina-divider::not(:empty)::before {
+  margin-right: 1rem;
+}
+
+.lumina-divider::not(:empty)::after {
+  margin-left: 1rem;
+}
+
+.lumina-socials {
+  display: flex;
+  gap: 1rem;
+}
+
+.lumina-btn-social {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem;
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lumina-btn-social:hover {
+  background: var(--input-bg);
+}
+
+.lumina-footer {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.lumina-footer a {
+  color: var(--lumina-teal);
+  font-weight: 600;
+  text-decoration: none;
+}

@@ -1,33 +1,36 @@
 import React, { useState } from 'react';
-import './Login.css'; // Importing the specific Lumina design styles
+import { useNavigate } from 'react-router-dom';
+import './Login.css';
 
-const Login = ({ onLogin }) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (email && password && onLogin) {
-      onLogin(email);
+    if (email && password) {
+      // TODO: thay bằng xác thực thật khi có backend
+      navigate('/dashboard');
     }
   };
 
   return (
     <div className="lumina-container">
       <div className="lumina-layout">
-        
+
         {/* Left Branding Section */}
         <div className="lumina-branding">
           <div className="lumina-logo">
             <div className="lumina-logo-icon"></div>
             Lumina Task
           </div>
-          
+
           <h1 className="lumina-title">
             The Mindful<br />
             <em>Curator</em>
           </h1>
-          
+
           <p className="lumina-subtitle">
             Transform your overwhelming lists into a serene, editorial experience. Clarity begins with focused intention.
           </p>
@@ -68,13 +71,13 @@ const Login = ({ onLogin }) => {
               <div className="lumina-label-row">
                 <label className="lumina-label">Work Email</label>
               </div>
-              <input 
-                type="email" 
-                className="lumina-input" 
-                placeholder="name@company.com" 
+              <input
+                type="email"
+                className="lumina-input"
+                placeholder="name@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required 
+                required
               />
             </div>
 
@@ -83,13 +86,13 @@ const Login = ({ onLogin }) => {
                 <label className="lumina-label">Password</label>
                 <a href="#" className="lumina-forgot">FORGOT?</a>
               </div>
-              <input 
-                type="password" 
-                className="lumina-input" 
-                placeholder="••••••••" 
+              <input
+                type="password"
+                className="lumina-input"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required 
+                required
               />
             </div>
 

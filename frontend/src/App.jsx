@@ -1,41 +1,42 @@
-import React, { useState } from 'react';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import TaskForm from './pages/TaskForm';
+import React from 'react';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import Login from './pages/login/Login';
+import Dashboard from './pages/dashboard/Dashboard';
+import TaskForm from './pages/task/TaskForm';
+import TodoList from './pages/task/TodoList';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import './index.css';
 
-function App() {
-  const [user, setUser] = useState(null);
-  const [currentView, setCurrentView] = useState('login'); // login | dashboard | add_task
-
-  const handleLogin = (email) => {
-    setUser(email);
-    setCurrentView('dashboard');
-  };
-
-  const changeView = (view) => {
-    setCurrentView(view);
-  };
-
-  if (!user || currentView === 'login') {
-    return <Login onLogin={handleLogin} />;
-  }
-
-  return (
-    <div className="app-container">
-      <Sidebar currentView={currentView} changeView={changeView} />
-      
-      <div className="main-wrapper">
-        <Topbar currentView={currentView} />
-        
-        <main className="content-area">
-          {currentView === 'dashboard' && <Dashboard changeView={changeView} />}
-          {currentView === 'add_task' && <TaskForm changeView={changeView} />}
-        </main>
-      </div>
+// Layout dùng chung cho các trang sau khi login
+const AppLayout = () => (
+  <div className="app-container">
+    <Sidebar />
+    <div className="main-wrapper">
+      <Topbar />
+      <main className="content-area">
+        <Outlet />
+      </main>
     </div>
+  </div>
+);
+
+function App() {
+  return (
+    <Routes>
+      {/* Trang login — không có sidebar/topbar */}
+      <Route path="/login" element={<Login />} />
+
+      {/* Các trang chính — có layout chung */}
+      <Route element={<AppLayout />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/tasks" element={<TodoList />} />
+        <Route path="/tasks/new" element={<TaskForm />} />
+      </Route>
+
+      {/* Mặc định chuyển đến login */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
   );
 }
 

@@ -1,6 +1,17 @@
 import React from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 
-const Sidebar = ({ currentView, changeView }) => {
+const navItems = [
+  { to: '/dashboard', icon: '☀️', label: 'Today' },
+  { to: '/upcoming', icon: '📅', label: 'Upcoming' },
+  { to: '/projects', icon: '📁', label: 'Projects' },
+  { to: '/labels', icon: '🏷️', label: 'Labels' },
+  { to: '/archive', icon: '📥', label: 'Archive' },
+];
+
+const Sidebar = () => {
+  const navigate = useNavigate();
+
   return (
     <aside className="sidebar">
       {/* Brand */}
@@ -17,39 +28,36 @@ const Sidebar = ({ currentView, changeView }) => {
 
       {/* Nav */}
       <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
-        <button onClick={() => changeView('dashboard')} style={{
-          display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.875rem 1rem',
-          background: currentView === 'dashboard' ? 'white' : 'transparent',
-          color: currentView === 'dashboard' ? 'var(--lumina-teal)' : 'var(--lumina-teal)',
-          border: 'none', borderRadius: 'var(--radius-full)', cursor: 'pointer',
-          fontWeight: currentView === 'dashboard' ? 600 : 500, transition: 'all 0.2s', boxShadow: currentView === 'dashboard' ? '0 2px 8px rgba(0,0,0,0.02)' : 'none'
-        }}>
-          <span style={{ fontSize: '1.25rem' }}>☀️</span> Today
-        </button>
-        <button style={{
-          display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.875rem 1rem', background: 'transparent', color: 'var(--lumina-teal)', border: 'none', cursor: 'pointer', fontWeight: 500 
-        }}>
-          <span style={{ fontSize: '1.25rem' }}>📅</span> Upcoming
-        </button>
-        <button style={{
-          display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.875rem 1rem', background: 'transparent', color: 'var(--lumina-teal)', border: 'none', cursor: 'pointer', fontWeight: 500 
-        }}>
-          <span style={{ fontSize: '1.25rem' }}>📁</span> Projects
-        </button>
-        <button style={{
-          display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.875rem 1rem', background: 'transparent', color: 'var(--lumina-teal)', border: 'none', cursor: 'pointer', fontWeight: 500 
-        }}>
-          <span style={{ fontSize: '1.25rem' }}>🏷️</span> Labels
-        </button>
-        <button style={{
-          display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.875rem 1rem', background: 'transparent', color: 'var(--lumina-teal)', border: 'none', cursor: 'pointer', fontWeight: 500 
-        }}>
-          <span style={{ fontSize: '1.25rem' }}>📥</span> Archive
-        </button>
+        {navItems.map(({ to, icon, label }) => (
+          <NavLink
+            key={to}
+            to={to}
+            style={({ isActive }) => ({
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              padding: '0.875rem 1rem',
+              background: isActive ? 'white' : 'transparent',
+              color: 'var(--lumina-teal)',
+              borderRadius: 'var(--radius-full)',
+              textDecoration: 'none',
+              fontWeight: isActive ? 600 : 500,
+              transition: 'all 0.2s',
+              boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
+            })}
+          >
+            <span style={{ fontSize: '1.25rem' }}>{icon}</span>
+            {label}
+          </NavLink>
+        ))}
       </nav>
 
       {/* Action */}
-      <button className="btn-primary" onClick={() => changeView('add_task')} style={{ width: '100%', padding: '1rem' }}>
+      <button
+        className="btn-primary"
+        onClick={() => navigate('/tasks/new')}
+        style={{ width: '100%', padding: '1rem' }}
+      >
         <span style={{ fontSize: '1.2rem', fontWeight: 400 }}>+</span> New Task
       </button>
     </aside>

@@ -1,5 +1,5 @@
 import React from 'react';
-import TaskCard from '../components/TaskCard';
+import TaskCard from '../../components/TaskCard';
 
 const TodoList = ({ tasks, setTasks, onEdit }) => {
   const toggleTask = (id) => {

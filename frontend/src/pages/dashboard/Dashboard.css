@@ -1,0 +1,268 @@
+/* =============================================
+   Dashboard Layout
+   ============================================= */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* =============================================
+   Header Info
+   ============================================= */
+.dashboard__header {
+  margin-bottom: 3rem;
+}
+
+.dashboard__date-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard__subtitle {
+  color: var(--text-muted);
+  font-size: 1.125rem;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* =============================================
+   Main Grid
+   ============================================= */
+.dashboard__grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 3rem;
+  align-items: start;
+}
+
+/* =============================================
+   Left Column — Today Tasks
+   ============================================= */
+.dashboard__tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard__task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Task Card */
+.task-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  box-shadow: var(--shadow-sm);
+}
+
+.task-card--completed {
+  background: var(--bg-main);
+  box-shadow: none;
+}
+
+/* Checkbox */
+.task-card__checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 2px solid var(--lumina-teal);
+  margin-top: 2px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.task-card__checkbox--muted {
+  border-color: #b2c2bc;
+}
+
+.task-card__checkbox--done {
+  background: var(--lumina-teal);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Task body */
+.task-card__body {
+  flex: 1;
+}
+
+.task-card__body--faded {
+  opacity: 0.6;
+}
+
+.task-card__title {
+  font-size: 1.125rem;
+  margin-bottom: 0.25rem;
+}
+
+.task-card__title--strikethrough {
+  text-decoration: line-through;
+}
+
+.task-card__description {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.task-card__meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.task-card__meta--tight {
+  margin-top: 0.5rem;
+}
+
+/* Priority pill variant */
+.pill--high-priority {
+  background: #d5ece9;
+  color: var(--lumina-teal);
+}
+
+/* Time badge */
+.task-card__time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* =============================================
+   Right Column
+   ============================================= */
+.dashboard__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* =============================================
+   Upcoming Card
+   ============================================= */
+.upcoming-card {
+  background: var(--bg-main);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+}
+
+.upcoming-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.upcoming-card__title {
+  font-size: 1.125rem;
+}
+
+.upcoming-card__link {
+  font-size: 0.875rem;
+  color: var(--lumina-teal);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.timeline__line {
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--border-light);
+}
+
+.timeline__item {
+  position: relative;
+}
+
+.timeline__dot {
+  position: absolute;
+  left: -1.5rem;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--lumina-teal);
+}
+
+.timeline__dot--muted {
+  border-color: #b2c2bc;
+}
+
+.timeline__date {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.timeline__event-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.timeline__event-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* =============================================
+   Focus Insight Card
+   ============================================= */
+.insight-card {
+  background: var(--insight-bg);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+}
+
+.insight-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--lumina-teal);
+}
+
+.insight-card__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.insight-card__text {
+  font-size: 0.875rem;
+  color: var(--lumina-teal);
+  line-height: 1.6;
+}

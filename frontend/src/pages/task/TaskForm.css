@@ -1,0 +1,362 @@
+/* =============================================
+   TaskForm — Page Wrapper
+   ============================================= */
+.task-form-page {
+  max-width: 800px;
+}
+
+/* =============================================
+   Form Card
+   ============================================= */
+.task-form-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+/* =============================================
+   Field label (uppercase caption)
+   ============================================= */
+.field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+/* =============================================
+   Title Input
+   ============================================= */
+.task-form-page .title-group {
+  margin-bottom: 1.5rem;
+}
+
+.task-form-page .title-input {
+  width: 100%;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-main);
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0.5rem 0 0.5rem 1rem;
+  border-left: 2px solid var(--border-light);
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.task-form-page .title-input:focus {
+  border-left-color: var(--lumina-teal);
+}
+
+/* =============================================
+   Description Textarea
+   ============================================= */
+.task-form-page .desc-group {
+  margin-bottom: 2.5rem;
+}
+
+.task-form-page .desc-textarea {
+  width: 100%;
+  min-height: 120px;
+  background: var(--input-bg);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  font-size: 0.9375rem;
+  color: var(--text-main);
+  outline: none;
+  resize: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.task-form-page .desc-textarea:focus {
+  border-color: var(--lumina-teal);
+}
+
+/* =============================================
+   Options Grid
+   ============================================= */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+/* Option Block (Schedule / Priority / Project / Tags) */
+.option-block {
+  background: var(--input-bg);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+}
+
+.option-block__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--lumina-teal);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+/* =============================================
+   Schedule — Date & Time inputs
+   ============================================= */
+.schedule-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.schedule-field {
+  flex: 1;
+  position: relative;
+}
+
+/* Hidden native input floated over the icon/text */
+.schedule-field input[type="date"],
+.schedule-field input[type="time"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+}
+
+.schedule-display {
+  background: white;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  border: 1.5px solid transparent;
+  transition: border-color 0.2s, color 0.2s;
+  cursor: pointer;
+  user-select: none;
+}
+
+.schedule-display.has-value {
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.schedule-field:focus-within .schedule-display {
+  border-color: var(--lumina-teal);
+}
+
+/* =============================================
+   Priority Toggle
+   ============================================= */
+.priority-toggle {
+  display: flex;
+  gap: 0.5rem;
+  background: white;
+  padding: 0.25rem;
+  border-radius: var(--radius-full);
+}
+
+.priority-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  border-radius: var(--radius-full);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.priority-btn.active-low {
+  background: #fce8d3;
+  color: #b45309;
+  font-weight: 700;
+}
+
+.priority-btn.active-medium {
+  background: var(--insight-bg);
+  color: var(--lumina-teal);
+  font-weight: 700;
+}
+
+.priority-btn.active-high {
+  background: #fde8e8;
+  color: #c0392b;
+  font-weight: 700;
+}
+
+/* =============================================
+   Project Dropdown
+   ============================================= */
+.project-select-wrapper {
+  position: relative;
+}
+
+.project-select-wrapper select {
+  width: 100%;
+  background: white;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  font-size: 0.875rem;
+  color: var(--text-main);
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.project-select-wrapper select:focus {
+  border-color: var(--lumina-teal);
+}
+
+.project-select-wrapper .select-chevron {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  font-style: normal;
+  font-size: 0.9rem;
+}
+
+/* =============================================
+   Tags
+   ============================================= */
+.tags-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tag-pill {
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.tag-pill:hover {
+  opacity: 0.8;
+}
+
+.tag-pill--teal  { background: #7bf0e3; color: var(--lumina-teal); }
+.tag-pill--blue  { background: #b3e6f5; color: #006080; }
+.tag-pill--rose  { background: #fde8e8; color: #c0392b; }
+
+.tag-add-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tag-add-btn:hover {
+  background: var(--lumina-teal);
+  color: white;
+}
+
+.tag-input {
+  border: 1.5px solid var(--lumina-teal);
+  border-radius: var(--radius-full);
+  padding: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+  font-family: inherit;
+  outline: none;
+  width: 90px;
+  background: white;
+}
+
+/* =============================================
+   Divider
+   ============================================= */
+.form-divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 0 -2.5rem 2rem -2.5rem;
+}
+
+/* =============================================
+   Bottom Actions
+   ============================================= */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-actions__discard {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.form-actions__discard:hover {
+  color: #c0392b;
+}
+
+.form-actions__right {
+  display: flex;
+  gap: 1rem;
+}
+
+/* =============================================
+   Keyboard Hints
+   ============================================= */
+.keyboard-hints {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.keyboard-hints__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.kbd {
+  border: 1px solid var(--border-light);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  background: white;
+  font-family: monospace;
+}

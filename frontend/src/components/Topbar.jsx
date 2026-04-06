@@ -1,20 +1,30 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
-const Topbar = ({ currentView }) => {
+const pageTitles = {
+  '/dashboard': 'Lumina Task',
+  '/tasks/new': 'New Task',
+  '/tasks': 'All Tasks',
+};
+
+const Topbar = () => {
+  const { pathname } = useLocation();
+  const title = pageTitles[pathname] ?? 'Lumina Task';
+  const showSearch = pathname === '/dashboard';
+
   return (
     <header className="topbar">
       <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-        {currentView === 'dashboard' && (
-          <div style={{ fontWeight: 700, fontSize: '1.25rem' }}>Lumina Task</div>
-        )}
-        {currentView === 'add_task' && (
-          <div style={{ fontWeight: 700, fontSize: '1.5rem' }}>New Task</div>
-        )}
-        
-        {currentView === 'dashboard' && (
+        <div style={{ fontWeight: 700, fontSize: pathname === '/tasks/new' ? '1.5rem' : '1.25rem' }}>
+          {title}
+        </div>
+
+        {showSearch && (
           <div style={{ position: 'relative' }}>
             <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--lumina-teal)' }}>
-               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+              </svg>
             </span>
             <input type="text" className="input-search" placeholder="Search curated tasks..." />
           </div>
@@ -33,7 +43,7 @@ const Topbar = ({ currentView }) => {
           </svg>
         </button>
         <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fbdcb7', border: '2px solid white', cursor: 'pointer', overflow: 'hidden' }}>
-           <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Sarah&backgroundColor=transparent" alt="Avatar" width="100%" height="100%" />
+          <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Sarah&backgroundColor=transparent" alt="Avatar" width="100%" height="100%" />
         </div>
       </div>
     </header>

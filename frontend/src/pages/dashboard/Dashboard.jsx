@@ -1,109 +1,218 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import useTasks from '../../hooks/useTasks';
 import './Dashboard.css';
 
+// ─── Helpers ───────────────────────────────────────────────────────────────
+
+/** Format 'YYYY-MM-DD' → 'Monday, Apr 7' */
+const formatDateLabel = (dateStr) => {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+};
+
+/** Format 'HH:MM' → '10:30 AM' */
+const formatTime = (t) => {
+  if (!t) return null;
+  const [h, min] = t.split(':').map(Number);
+  return `${h % 12 || 12}:${String(min).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
+};
+
+/** dueDate relative label cho upcoming */
+const relativeDateLabel = (dateStr) => {
+  const today   = new Date(); today.setHours(0, 0, 0, 0);
+  const target  = new Date(dateStr + 'T00:00:00');
+  const diffDay = Math.round((target - today) / 86_400_000);
+  if (diffDay === 1) return 'Tomorrow';
+  return target.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+};
+
+const PRIORITY_CLASS = { high: 'pill-danger', medium: 'pill-primary', low: 'pill-neutral' };
+const PRIORITY_LABEL = { high: 'High Priority', medium: 'Medium', low: 'Low' };
+
+const greetingByHour = () => {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good Morning';
+  if (h < 17) return 'Good Afternoon';
+  return 'Good Evening';
+};
+
+// ─── Sub-components ────────────────────────────────────────────────────────
+
+const CheckIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+    stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
+
+const LoadingState = () => (
+  <div className="dashboard__loading">
+    <div className="dashboard__loading-spinner" />
+    <span>Loading tasks…</span>
+  </div>
+);
+
+const EmptyToday = () => (
+  <div className="dashboard__empty">
+    <span className="dashboard__empty-icon">✨</span>
+    <p>No tasks scheduled for today.</p>
+    <Link to="/tasks/new" className="btn-primary" style={{ marginTop: '1rem', display: 'inline-flex' }}>
+      + Add a task
+    </Link>
+  </div>
+);
+
+// ─── Task Card (Today) ─────────────────────────────────────────────────────
+
+const TodayTaskCard = ({ task, onToggle }) => {
+  const done = task.completed;
+
+  return (
+    <div className={`task-card ${done ? 'task-card--completed' : ''}`}>
+      <button
+        className={`task-card__checkbox ${done ? 'task-card__checkbox--done' : ''} ${!done && task.priority === 'low' ? 'task-card__checkbox--muted' : ''}`}
+        onClick={() => onToggle(task.id)}
+        aria-label={done ? 'Mark incomplete' : 'Mark complete'}
+      >
+        {done && <CheckIcon />}
+      </button>
+
+      <div className={`task-card__body ${done ? 'task-card__body--faded' : ''}`}>
+        <h3 className={`task-card__title ${done ? 'task-card__title--strikethrough' : ''}`}>
+          {task.title}
+        </h3>
+
+        {task.description && !done && (
+          <p className="task-card__description">{task.description}</p>
+        )}
+
+        <div className={`task-card__meta ${done ? 'task-card__meta--tight' : ''}`}>
+          {done ? (
+            <span className="pill pill-neutral">Completed</span>
+          ) : (
+            <>
+              <span className={`pill ${PRIORITY_CLASS[task.priority]}`}>
+                {PRIORITY_LABEL[task.priority]}
+              </span>
+              {task.dueTime && (
+                <span className="task-card__time">🕒 {formatTime(task.dueTime)}</span>
+              )}
+              {task.tags.slice(0, 2).map((tag) => (
+                <span key={tag} className="pill pill-neutral">{tag}</span>
+              ))}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── Dashboard ─────────────────────────────────────────────────────────────
+
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const { todayTasks, upcomingTasks, todayStats, loading, error, toggleTask } = useTasks();
+
+  const todayLabel = formatDateLabel(new Date().toISOString().split('T')[0]);
+
   return (
     <div className="dashboard">
-      {/* Header Info */}
+      {/* ── Header ── */}
       <div className="dashboard__header">
-        <div className="dashboard__date-label">Monday, Oct 23</div>
-        <h1 className="heading-xl">Good Morning, <em>Sarah.</em></h1>
+        <div className="dashboard__date-label">{todayLabel}</div>
+        <h1 className="heading-xl">{greetingByHour()}, <em>Sarah.</em></h1>
         <p className="dashboard__subtitle">
-          You have 4 high-priority tasks curated for today. Focus on the editorial pitch first.
+          {loading
+            ? 'Loading your curated tasks…'
+            : todayStats.highPrio > 0
+              ? `You have ${todayStats.highPrio} high-priority task${todayStats.highPrio > 1 ? 's' : ''} for today. Stay focused.`
+              : todayStats.total > 0
+                ? `You have ${todayStats.total - todayStats.done} task${(todayStats.total - todayStats.done) !== 1 ? 's' : ''} remaining today.`
+                : 'All caught up for today. Great work!'}
         </p>
       </div>
 
-      {/* Main Grid */}
+      {/* ── Main Grid ── */}
       <div className="dashboard__grid">
 
-        {/* Left Column: Today Tasks */}
+        {/* ── Left Column: Today ── */}
         <div>
           <div className="dashboard__tasks-header">
             <h2>Today</h2>
-            <span className="pill pill-primary">4 Tasks</span>
+            {!loading && (
+              <span className="pill pill-primary">
+                {todayStats.total - todayStats.done}/{todayStats.total} Tasks
+              </span>
+            )}
           </div>
 
-          <div className="dashboard__task-list">
-            {/* Task 1 */}
-            <div className="task-card">
-              <div className="task-card__checkbox"></div>
-              <div className="task-card__body">
-                <h3 className="task-card__title">Review Brand Editorial Pitch</h3>
-                <p className="task-card__description">
-                  Finalize the tone of voice guidelines for the Lumina project launch.
-                </p>
-                <div className="task-card__meta">
-                  <span className="pill pill-primary pill--high-priority">High Priority</span>
-                  <span className="task-card__time">🕒 10:30 AM</span>
-                </div>
-              </div>
-            </div>
+          {error && <p className="dashboard__error">⚠ {error}</p>}
 
-            {/* Task 2 */}
-            <div className="task-card">
-              <div className="task-card__checkbox task-card__checkbox--muted"></div>
-              <div className="task-card__body">
-                <h3 className="task-card__title">Weekly Strategy Sync</h3>
-                <div className="task-card__meta">
-                  <span className="pill pill-blue">Strategy</span>
-                  <span className="task-card__time">🕒 2:00 PM</span>
-                </div>
-              </div>
+          {loading ? (
+            <LoadingState />
+          ) : todayTasks.length === 0 ? (
+            <EmptyToday />
+          ) : (
+            <div className="dashboard__task-list">
+              {/* Active tasks first */}
+              {todayTasks
+                .filter((t) => !t.completed)
+                .sort((a, b) => (a.dueTime ?? '99:99').localeCompare(b.dueTime ?? '99:99'))
+                .map((task) => (
+                  <TodayTaskCard key={task.id} task={task} onToggle={toggleTask} />
+                ))}
+              {/* Completed tasks at bottom */}
+              {todayTasks
+                .filter((t) => t.completed)
+                .map((task) => (
+                  <TodayTaskCard key={task.id} task={task} onToggle={toggleTask} />
+                ))}
             </div>
+          )}
 
-            {/* Task 3 — Completed */}
-            <div className="task-card task-card--completed">
-              <div className="task-card__checkbox task-card__checkbox--done">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-              </div>
-              <div className="task-card__body task-card__body--faded">
-                <h3 className="task-card__title task-card__title--strikethrough">Design System Audit</h3>
-                <div className="task-card__meta task-card__meta--tight">
-                  <span className="pill pill-neutral">Completed</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          View all tasks link
+          {!loading && todayTasks.length > 0 && (
+            <button
+              className="dashboard__view-all"
+              onClick={() => navigate('/tasks')}
+            >
+              View all tasks →
+            </button>
+          )}
         </div>
 
-        {/* Right Column: Upcoming & Insights */}
+        {/* ── Right Column ── */}
         <div className="dashboard__sidebar">
 
           {/* Upcoming Card */}
           <div className="upcoming-card">
             <div className="upcoming-card__header">
               <h3 className="upcoming-card__title">Upcoming</h3>
-              <Link to="/upcoming" className="upcoming-card__link">View Calendar &gt;</Link>
+              <Link to="/upcoming" className="upcoming-card__link">View all &gt;</Link>
             </div>
 
             <div className="timeline">
-              {/* Timeline line */}
-              <div className="timeline__line"></div>
-
-              <div className="timeline__item">
-                <div className="timeline__dot"></div>
-                <div className="timeline__date">Tomorrow</div>
-                <div className="timeline__event-title">Project Handoff: Zenith App</div>
-                <div className="timeline__event-sub">9:00 AM — Main Studio</div>
-              </div>
-
-              <div className="timeline__item">
-                <div className="timeline__dot timeline__dot--muted"></div>
-                <div className="timeline__date">Wednesday, Oct 25</div>
-                <div className="timeline__event-title">Yoga & Breathwork Session</div>
-                <div className="timeline__event-sub">6:00 PM — Wellness Center</div>
-              </div>
-
-              <div className="timeline__item">
-                <div className="timeline__dot timeline__dot--muted"></div>
-                <div className="timeline__date">Friday, Oct 27</div>
-                <div className="timeline__event-title">Quarterly Editorial Review</div>
-                <div className="timeline__event-sub">All Day</div>
-              </div>
+              <div className="timeline__line" />
+              {loading ? (
+                <LoadingState />
+              ) : upcomingTasks.length === 0 ? (
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                  Nothing scheduled ahead. 🎉
+                </p>
+              ) : (
+                upcomingTasks.slice(0, 4).map((task, i) => (
+                  <div key={task.id} className="timeline__item">
+                    <div className={`timeline__dot ${i > 0 ? 'timeline__dot--muted' : ''}`} />
+                    <div className="timeline__date">{relativeDateLabel(task.dueDate)}</div>
+                    <div className="timeline__event-title">{task.title}</div>
+                    <div className="timeline__event-sub">
+                      {task.dueTime ? `${formatTime(task.dueTime)} — ` : ''}{task.project}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
@@ -111,12 +220,14 @@ const Dashboard = () => {
           <div className="insight-card">
             <div className="insight-card__header">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2ZM5 4L5.8 6.2L8 7L5.8 7.8L5 10L4.2 7.8L2 7L4.2 6.2L5 4Z"/>
+                <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2ZM5 4L5.8 6.2L8 7L5.8 7.8L5 10L4.2 7.8L2 7L4.2 6.2L5 4Z" />
               </svg>
               <span className="insight-card__label">FOCUS INSIGHT</span>
             </div>
             <p className="insight-card__text">
-              You are 15% more productive during your <strong>10:00 AM sessions</strong>. We've blocked your calendar for deep focus.
+              {todayStats.done > 0
+                ? <>You've completed <strong>{todayStats.done} task{todayStats.done > 1 ? 's' : ''}</strong> today. Keep the momentum going!</>
+                : <>You are 15% more productive during your <strong>10:00 AM sessions</strong>. We've blocked your calendar for deep focus.</>}
             </p>
           </div>
 

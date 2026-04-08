@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Login from './pages/login/Login';
 import Dashboard from './pages/dashboard/Dashboard';
 import TaskForm from './pages/task/TaskForm';
+import TaskDetail from './pages/task/TaskDetail';
 import CalendarView from './pages/calendar/CalendarView';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
@@ -31,8 +32,10 @@ function App() {
       <Route element={<AppLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/tasks" element={<CalendarView />} />
-        <Route path="/upcoming" element={<CalendarView />} />
         <Route path="/tasks/new" element={<TaskForm />} />
+        <Route path="/tasks/:id/edit" element={<TaskForm />} />
+        <Route path="/tasks/:id" element={<TaskDetail />} />
+        <Route path="/upcoming" element={<CalendarView />} />
       </Route>
 
       {/* Mặc định chuyển đến login */}

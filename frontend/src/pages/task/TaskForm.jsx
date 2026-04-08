@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import useTasks from '../../hooks/useTasks';
 import './TaskForm.css';
 
 const PROJECTS = ['Personal Development', 'Work', 'Health & Wellness', 'Side Project', 'Learning'];
@@ -7,6 +8,9 @@ const TAG_OPTIONS = ['Focus', 'Deep Work', 'Urgent', 'Creative', 'Admin'];
 
 const TaskForm = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const { tasks, createTask, updateTask } = useTasks();
+  const isEditing = !!id;
 
   // ── Core fields ──────────────────────────────────────────────
   const [title, setTitle]             = useState('');
@@ -30,7 +34,31 @@ const TaskForm = () => {
   const [tagInput, setTagInput]   = useState('');
 
   // ── Handlers ─────────────────────────────────────────────────
-  const handleCreate = () => navigate('/dashboard');
+  useEffect(() => {
+    if (isEditing && tasks.length > 0) {
+      const t = tasks.find(x => x.id === id);
+      if (t) {
+        setTitle(t.title || '');
+        setDescription(t.description || '');
+        setDate(t.dueDate || '');
+        setTime(t.dueTime || '');
+        setPriority(t.priority || 'medium');
+        setProject(t.project || PROJECTS[0]);
+        setTags(t.tags || []);
+      }
+    }
+  }, [id, tasks, isEditing]);
+
+  const handleSave = async () => {
+    const taskData = { title, description, dueDate: date, dueTime: time, priority, project, tags };
+    if (isEditing) {
+      await updateTask(id, taskData);
+      navigate(`/tasks/${id}`);
+    } else {
+      await createTask(taskData);
+      navigate('/dashboard');
+    }
+  };
 
   const removeTag = (tag) => setTags(tags.filter(t => t !== tag));
 
@@ -207,12 +235,12 @@ const TaskForm = () => {
 
         {/* ── Actions ── */}
         <div className="form-actions">
-          <button className="form-actions__discard">
-            <span>🗑️</span> Discard Draft
+          <button className="form-actions__discard" onClick={() => navigate(-1)}>
+            <span>🗑️</span> Discard
           </button>
           <div className="form-actions__right">
-            <button className="btn-secondary" onClick={() => navigate('/dashboard')}>Cancel</button>
-            <button className="btn-primary"   onClick={handleCreate}>Create Task</button>
+            <button className="btn-secondary" onClick={() => navigate(-1)}>Cancel</button>
+            <button className="btn-primary"   onClick={handleSave}>{isEditing ? 'Save Changes' : 'Create Task'}</button>
           </div>
         </div>
 

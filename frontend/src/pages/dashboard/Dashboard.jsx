@@ -65,7 +65,7 @@ const EmptyToday = () => (
 
 // ─── Task Card (Today) ─────────────────────────────────────────────────────
 
-const TodayTaskCard = ({ task, onToggle }) => {
+const TodayTaskCard = ({ task, onToggle, onClick }) => {
   const done = task.completed;
 
   return (
@@ -78,7 +78,7 @@ const TodayTaskCard = ({ task, onToggle }) => {
         {done && <CheckIcon />}
       </button>
 
-      <div className={`task-card__body ${done ? 'task-card__body--faded' : ''}`}>
+      <div className={`task-card__body ${done ? 'task-card__body--faded' : ''}`} onClick={onClick} style={{ cursor: 'pointer' }}>
         <h3 className={`task-card__title ${done ? 'task-card__title--strikethrough' : ''}`}>
           {task.title}
         </h3>
@@ -161,13 +161,13 @@ const Dashboard = () => {
                 .filter((t) => !t.completed)
                 .sort((a, b) => (a.dueTime ?? '99:99').localeCompare(b.dueTime ?? '99:99'))
                 .map((task) => (
-                  <TodayTaskCard key={task.id} task={task} onToggle={toggleTask} />
+                  <TodayTaskCard key={task.id} task={task} onToggle={toggleTask} onClick={() => navigate(`/tasks/${task.id}`)} />
                 ))}
               {/* Completed tasks at bottom */}
               {todayTasks
                 .filter((t) => t.completed)
                 .map((task) => (
-                  <TodayTaskCard key={task.id} task={task} onToggle={toggleTask} />
+                  <TodayTaskCard key={task.id} task={task} onToggle={toggleTask} onClick={() => navigate(`/tasks/${task.id}`)} />
                 ))}
             </div>
           )}
@@ -189,26 +189,26 @@ const Dashboard = () => {
           {/* Upcoming Card */}
           <div className="upcoming-card">
             <div className="upcoming-card__header">
-              <h3 className="upcoming-card__title">Upcoming</h3>
-              <Link to="/upcoming" className="upcoming-card__link">View all &gt;</Link>
+              <h3 className="upcoming-card__title">Today's Schedule</h3>
+              <Link to="/upcoming" className="upcoming-card__link">View calendar &gt;</Link>
             </div>
 
             <div className="timeline">
               <div className="timeline__line" />
               {loading ? (
                 <LoadingState />
-              ) : upcomingTasks.length === 0 ? (
+              ) : todayTasks.length === 0 ? (
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                  Nothing scheduled ahead. 🎉
+                  No tasks scheduled today. 🎉
                 </p>
               ) : (
-                upcomingTasks.slice(0, 4).map((task, i) => (
-                  <div key={task.id} className="timeline__item">
-                    <div className={`timeline__dot ${i > 0 ? 'timeline__dot--muted' : ''}`} />
-                    <div className="timeline__date">{relativeDateLabel(task.dueDate)}</div>
-                    <div className="timeline__event-title">{task.title}</div>
+                todayTasks.slice(0, 4).map((task, i) => (
+                  <div key={task.id} className="timeline__item" style={{ cursor: 'pointer' }} onClick={() => navigate(`/tasks/${task.id}`)}>
+                    <div className={`timeline__dot ${task.completed ? 'timeline__dot--muted' : ''}`} />
+                    <div className="timeline__date">{task.dueTime ? formatTime(task.dueTime) : 'All Day'}</div>
+                    <div className="timeline__event-title" style={{ textDecoration: task.completed ? 'line-through' : 'none', color: task.completed ? 'var(--text-muted)' : 'inherit' }}>{task.title}</div>
                     <div className="timeline__event-sub">
-                      {task.dueTime ? `${formatTime(task.dueTime)} — ` : ''}{task.project}
+                      {task.project}
                     </div>
                   </div>
                 ))

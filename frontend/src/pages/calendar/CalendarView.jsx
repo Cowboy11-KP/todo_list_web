@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useTasks from '../../hooks/useTasks';
 import './CalendarView.css';
 
@@ -46,6 +47,7 @@ const getRandomColor = (str) => {
 };
 
 const CalendarView = () => {
+  const navigate = useNavigate();
   const { tasks, loading } = useTasks();
 
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -102,7 +104,7 @@ const CalendarView = () => {
     return map;
   }, [tasks]);
 
-  const selectedDateStr = selectedDate.toISOString().split('T')[0];
+  const selectedDateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
   const selectedTasks = [...(tasksByDate[selectedDateStr] || [])].sort((a,b) => (a.dueTime || '99:99').localeCompare(b.dueTime || '99:99'));
   
   const tasksThisMonth = useMemo(() => {
@@ -162,7 +164,8 @@ const CalendarView = () => {
                       <div 
                         key={task.id} 
                         className={`calendar-task ${isSelected ? 'selected-view' : ''}`}
-                        style={!isSelected ? { backgroundColor: colors.bg, color: colors.color } : {}}
+                        style={!isSelected ? { backgroundColor: colors.bg, color: colors.color, cursor: 'pointer' } : { cursor: 'pointer' }}
+                        onClick={(e) => { e.stopPropagation(); navigate(`/tasks/${task.id}`); }}
                       >
                         <div className="calendar-task-dot" />
                         {task.title.substring(0, 8)}...
@@ -198,7 +201,7 @@ const CalendarView = () => {
               <p style={{color: 'var(--text-light)', fontSize: '0.85rem'}}>No tasks scheduled.</p>
             ) : (
               selectedTasks.map((task, i) => (
-                <div className="schedule-item" key={task.id}>
+                <div className="schedule-item" key={task.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/tasks/${task.id}`)}>
                   <div className={`schedule-dot ${task.completed ? 'faded' : ''}`} />
                   <div className="schedule-item-time">
                     {task.dueTime ? task.dueTime : 'All Day'}

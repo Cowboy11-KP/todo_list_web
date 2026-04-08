@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Login from './pages/login/Login';
 import Dashboard from './pages/dashboard/Dashboard';
 import TaskForm from './pages/task/TaskForm';
-import TodoList from './pages/task/TodoList';
+import CalendarView from './pages/calendar/CalendarView';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import './index.css';
@@ -30,7 +30,8 @@ function App() {
       {/* Các trang chính — có layout chung */}
       <Route element={<AppLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/tasks" element={<TodoList />} />
+        <Route path="/tasks" element={<CalendarView />} />
+        <Route path="/upcoming" element={<CalendarView />} />
         <Route path="/tasks/new" element={<TaskForm />} />
       </Route>
 

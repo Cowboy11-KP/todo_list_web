@@ -52,6 +52,9 @@ const CalendarView = () => {
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  
+  // Mindfulness interactive state
+  const [mindfulnessState, setMindfulnessState] = useState({});
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -113,6 +116,16 @@ const CalendarView = () => {
   }, [tasks, year, month]);
 
   const sidebarLabels = formatDaySidebar(selectedDate);
+
+  const toggleMindfulness = (dateStr, habitId) => {
+    setMindfulnessState(prev => ({
+      ...prev,
+      [dateStr]: {
+        ...(prev[dateStr] || {}),
+        [habitId]: !(prev[dateStr]?.[habitId])
+      }
+    }));
+  };
 
   return (
     <div className="calendar-layout">
@@ -240,16 +253,20 @@ const CalendarView = () => {
             </svg>
           </div>
           <div className="mindfulness-list">
-            <div className="mindfulness-item checked">
-              <div className="mindfulness-checkbox">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              </div>
-              <span>10m Morning Breathwork</span>
-            </div>
-            <div className="mindfulness-item">
-              <div className="mindfulness-checkbox"></div>
-              <span>Afternoon Tea Ceremony</span>
-            </div>
+            {[
+              { id: 'habit-1', title: '10m Morning Breathwork' },
+              { id: 'habit-2', title: 'Afternoon Tea Ceremony' }
+            ].map(habit => {
+               const isChecked = mindfulnessState[selectedDateStr]?.[habit.id] || false;
+               return (
+                 <div key={habit.id} className={`mindfulness-item ${isChecked ? 'checked' : ''}`} onClick={() => toggleMindfulness(selectedDateStr, habit.id)}>
+                   <div className="mindfulness-checkbox">
+                     {isChecked && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>}
+                   </div>
+                   <span>{habit.title}</span>
+                 </div>
+               )
+            })}
           </div>
         </div>
       </div>

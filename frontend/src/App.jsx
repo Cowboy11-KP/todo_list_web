@@ -5,6 +5,7 @@ import Dashboard from './pages/dashboard/Dashboard';
 import TaskForm from './pages/task/TaskForm';
 import TaskDetail from './pages/task/TaskDetail';
 import CalendarView from './pages/calendar/CalendarView';
+import Archive from './pages/archive/Archive';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import './index.css';
@@ -36,6 +37,7 @@ function App() {
         <Route path="/tasks/:id/edit" element={<TaskForm />} />
         <Route path="/tasks/:id" element={<TaskDetail />} />
         <Route path="/upcoming" element={<CalendarView />} />
+        <Route path="/archive" element={<Archive />} />
       </Route>
 
       {/* Mặc định chuyển đến login */}

@@ -1,34 +1,96 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import useTasks from '../hooks/useTasks';
 
 const pageTitles = {
   '/dashboard': 'Lumina Task',
   '/tasks/new': 'New Task',
   '/tasks': 'All Tasks',
+  '/archive': 'Archive'
 };
 
 const Topbar = () => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const title = pageTitles[pathname] ?? 'Lumina Task';
-  const showSearch = pathname === '/dashboard';
+
+  const { tasks } = useTasks();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const wrapperRef = useRef(null);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const searchResults = searchTerm.trim()
+    ? tasks.filter(t => 
+        (t.title && t.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (t.project && t.project.toLowerCase().includes(searchTerm.toLowerCase()))
+      ).slice(0, 5)
+    : [];
+
+  const handleSelect = (id) => {
+    setSearchTerm('');
+    setShowDropdown(false);
+    navigate(`/tasks/${id}`);
+  };
 
   return (
     <header className="topbar">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', flex: 1 }}>
         <div style={{ fontWeight: 700, fontSize: pathname === '/tasks/new' ? '1.5rem' : '1.25rem' }}>
           {title}
         </div>
 
-        {showSearch && (
-          <div style={{ position: 'relative' }}>
-            <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--lumina-teal)' }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-              </svg>
-            </span>
-            <input type="text" className="input-search" placeholder="Search curated tasks..." />
-          </div>
-        )}
+        <div className="search-wrapper" ref={wrapperRef} style={{ position: 'relative', width: '400px' }}>
+          <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--lumina-teal)', pointerEvents: 'none' }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+            </svg>
+          </span>
+          <input 
+            type="text" 
+            className="input-search" 
+            placeholder="Search tasks or projects..." 
+            style={{ width: '100%' }}
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setShowDropdown(true);
+            }}
+            onFocus={() => setShowDropdown(true)}
+          />
+          
+          {/* Dropdown Results */}
+          {showDropdown && searchTerm.trim().length > 0 && (
+            <div className="search-dropdown">
+              {searchResults.length > 0 ? (
+                searchResults.map(task => (
+                  <div key={task.id} className="search-result-item" onClick={() => handleSelect(task.id)}>
+                    <div className="search-result-title" style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
+                      {task.title}
+                    </div>
+                    <div className="search-result-meta">
+                      {task.project ? `📍 ${task.project}` : 'No Project'} • {task.priority} priority
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                  No tasks matched your search.
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

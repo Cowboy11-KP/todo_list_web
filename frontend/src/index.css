@@ -165,3 +165,33 @@ h1, h2, h3, h4 {
   transition: var(--transition);
 }
 .input-search:focus { border-color: var(--border-light); background: white; box-shadow: var(--shadow-sm); }
+
+/* Search Dropdown */
+.search-wrapper { position: relative; }
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  width: 100%;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+.search-result-item {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-light);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  transition: var(--transition);
+}
+.search-result-item:last-child { border-bottom: none; }
+.search-result-item:hover { background: var(--insight-bg); }
+.search-result-title { font-weight: 600; font-size: 0.9rem; color: var(--text-main); }
+.search-result-meta { font-size: 0.75rem; color: var(--text-muted); }

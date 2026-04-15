@@ -77,7 +77,9 @@ const useTasks = () => {
       )
     );
     try {
-      const updated = await taskService.toggle(id);
+      const task = tasks.find(t => String(t.id) === String(id));
+      if (!task) return;
+      const updated = await taskService.toggle(id, !task.completed);
       setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
     } catch (err) {
       setError(err.message);

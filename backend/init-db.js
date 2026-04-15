@@ -1,19 +1,21 @@
+require('dotenv').config();
 const mysql = require('mysql2/promise');
 
 async function initializeDatabase() {
     try {
         const connection = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',      
-            password: '08102005a',  
+            host: process.env.DB_HOST || 'localhost',
+            user: process.env.DB_USER || 'root',
+            password: process.env.DB_PASSWORD || '',
         });
 
         console.log("⏳ Đang kết nối MySQL...");
 
-        await connection.query('CREATE DATABASE IF NOT EXISTS todo_db');
+        const dbName = process.env.DB_NAME || 'todo_db';
+        await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
         console.log("✔️ Đã tạo (hoặc tìm thấy) database: todo_db");
 
-        await connection.query('USE todo_db');
+        await connection.query(`USE \`${dbName}\``);
 
         await connection.query(`
             CREATE TABLE IF NOT EXISTS users (

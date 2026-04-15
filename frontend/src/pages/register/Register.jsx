@@ -1,30 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-import './Login.css';
+import '../login/Login.css';
 
-const Login = () => {
+const Register = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { loading, error, clearError, handleLogin } = useAuth();
+  const { loading, error, clearError, handleRegister } = useAuth();
   
-  // Get location state (like successful registration message)
-  const location = useLocation();
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    if (location.state?.message) {
-      setMessage(location.state.message);
-      // Clean up the location state so it doesn't persist on refresh
-      window.history.replaceState({}, document.title);
-    }
-  }, [location]);
-
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password) return;
-    setMessage('');
-    await handleLogin(email, password);
+    if (!name || !email || !password) return;
+    await handleRegister(name, email, password);
   };
 
   return (
@@ -43,26 +31,18 @@ const Login = () => {
             <em>Curator</em>
           </h1>
 
-          <p className="lumina-subtitle">
-            Transform your overwhelming lists into a serene, editorial experience. Clarity begins with focused intention.
+           <p className="lumina-subtitle">
+            Create an account to start curating your life and turning overwhelming lists into a serene experience.
           </p>
 
           <div className="lumina-features">
             <div className="lumina-feature-card">
                <div className="lumina-feature-icon">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="#006054"/>
+                  <path d="M5 13l4 4L19 7" stroke="#006054" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                </div>
-               <span className="lumina-feature-title">Deep Focus</span>
-            </div>
-            <div className="lumina-feature-card">
-               <div className="lumina-feature-icon">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                   <path fillRule="evenodd" clipRule="evenodd" d="M10.15 2.15C10.65 1.65 11.3 1.4 12 1.4C12.7 1.4 13.35 1.65 13.85 2.15L14.8 3.1V4.5H16.2L17.15 2.15H17.2V2.15L21.85 6.8V6.85L19.5 7.8V9.2L20.45 10.15H10.15V2.15Z" fill="#3D4A45"/>
-                </svg>
-               </div>
-               <span className="lumina-feature-title">Minimalist</span>
+               <span className="lumina-feature-title">Get Organized</span>
             </div>
           </div>
         </div>
@@ -70,15 +50,9 @@ const Login = () => {
         {/* Right Form Section */}
         <div className="lumina-form-container">
           <div className="lumina-form-header">
-            <h2>Welcome back</h2>
-            <p>Enter your details to return to your workspace.</p>
+            <h2>Join Lumina</h2>
+            <p>Create an account to access your workspace.</p>
           </div>
-
-          {message && (
-             <div style={{ padding: '1rem', background: '#d4edda', color: '#155724', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
-               {message}
-             </div>
-          )}
 
           {error && (
              <div style={{ padding: '1rem', background: '#f8d7da', color: '#721c24', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
@@ -87,6 +61,20 @@ const Login = () => {
           )}
 
           <form onSubmit={onSubmit}>
+            <div className="lumina-form-group">
+              <div className="lumina-label-row">
+                <label className="lumina-label">Full Name</label>
+              </div>
+              <input
+                type="text"
+                className="lumina-input"
+                placeholder="John Doe"
+                value={name}
+                onChange={(e) => { setName(e.target.value); clearError(); }}
+                required
+              />
+            </div>
+
             <div className="lumina-form-group">
               <div className="lumina-label-row">
                 <label className="lumina-label">Work Email</label>
@@ -104,30 +92,26 @@ const Login = () => {
             <div className="lumina-form-group">
               <div className="lumina-label-row">
                 <label className="lumina-label">Password</label>
-                <a href="#" className="lumina-forgot">FORGOT?</a>
               </div>
               <input
                 type="password"
                 className="lumina-input"
                 placeholder="••••••••"
+                pattern=".{6,}"
+                title="8 characters minimum"
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); clearError(); }}
                 required
               />
             </div>
 
-            <label className="lumina-checkbox">
-              <input type="checkbox" />
-              Stay signed in for 30 days
-            </label>
-
-            <button type="submit" className="lumina-btn-main" disabled={loading}>
-              {loading ? 'Authenticating...' : 'Sign into Lumina'}
+            <button type="submit" className="lumina-btn-main" disabled={loading} style={{ marginTop: '1rem' }}>
+              {loading ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
 
           <div className="lumina-footer" style={{ marginTop: '2rem' }}>
-            New to Lumina Task? <Link to="/register">Create a curator account</Link>
+            Already have an account? <Link to="/login">Sign in here</Link>
           </div>
 
         </div>
@@ -136,4 +120,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

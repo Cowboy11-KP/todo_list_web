@@ -1,6 +1,7 @@
 import React from 'react';
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Login from './pages/login/Login';
+import Register from './pages/register/Register';
 import Dashboard from './pages/dashboard/Dashboard';
 import TaskForm from './pages/task/TaskForm';
 import TaskDetail from './pages/task/TaskDetail';
@@ -28,6 +29,7 @@ function App() {
     <Routes>
       {/* Trang login — không có sidebar/topbar */}
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
       {/* Các trang chính — có layout chung */}
       <Route element={<AppLayout />}>
@@ -41,6 +43,7 @@ function App() {
       </Route>
 
       {/* Mặc định chuyển đến login */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );

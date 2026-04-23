@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/auth` : 'http://localhost:3000/auth';
+const BASE_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/auth` : 'http://localhost:3000/api/auth';
 
 const handleResponse = async (res) => {
   const data = await res.json().catch(() => null);

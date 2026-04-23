@@ -1,0 +1,34 @@
+name: Deploy to VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Executes deployment script via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USERNAME }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            # Chuyển vào thư mục chứa code
+            cd /home/admin123/todo_list_web
+            
+            # Kéo code mới nhất từ nhánh main
+            git pull origin main
+            
+            # --- Cài đặt & Khởi động lại Backend ---
+            cd backend
+            npm install
+            pm2 restart todo-backend
+            
+            # --- Cài đặt & Build lại Frontend ---
+            cd ../frontend
+            npm install
+            npm run build

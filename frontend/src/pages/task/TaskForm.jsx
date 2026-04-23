@@ -12,6 +12,8 @@ const TaskForm = () => {
   const { tasks, createTask, updateTask } = useTasks();
   const isEditing = !!id;
 
+  const [status, setStatus] = useState({ type: '', message: '' });
+
   // ── Core fields ──────────────────────────────────────────────
   const [title, setTitle]             = useState('');
   const [description, setDescription] = useState('');
@@ -51,12 +53,20 @@ const TaskForm = () => {
 
   const handleSave = async () => {
     const taskData = { title, description, dueDate: date, dueTime: time, priority, project, tags };
-    if (isEditing) {
-      await updateTask(id, taskData);
-      navigate(`/tasks/${id}`);
-    } else {
-      await createTask(taskData);
-      navigate('/dashboard');
+    setStatus({ type: 'loading', message: 'Đang lưu...' });
+    try {
+      if (isEditing) {
+        await updateTask(id, taskData);
+      } else {
+        await createTask(taskData); 
+      }
+      setStatus({ type: 'success', message: isEditing ? 'Cập nhật thành công!' : 'Tạo mới thành công!' });
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1500);
+    } catch (err) {
+      console.error('Lỗi khi lưu task:', err);
+      setStatus({ type: 'error', message: err.message || 'Có lỗi xảy ra khi lưu task!' });
     }
   };
 
@@ -95,6 +105,15 @@ const TaskForm = () => {
   return (
     <div className="task-form-page">
       <div className="task-form-card">
+
+        {status.message && (
+          <div className={`status-banner status-${status.type}`}>
+            {status.message}
+            {status.type === 'error' && (
+              <button className="status-close" onClick={() => setStatus({ type: '', message: '' })}>×</button>
+            )}
+          </div>
+        )}
 
         {/* ── Title ── */}
         <div className="title-group">

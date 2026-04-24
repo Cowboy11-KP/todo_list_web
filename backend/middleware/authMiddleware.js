@@ -18,7 +18,15 @@ module.exports = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
+    const secretLen = process.env.JWT_SECRET ? process.env.JWT_SECRET.trim().length : 'undefined';
     console.error("JWT Verify Error:", err.message);
-    res.status(401).json({ message: 'Invalid token' });
+    res.status(401).json({ 
+      message: 'Invalid token', 
+      debug: {
+        error: err.message,
+        secretLength: secretLen,
+        nodeEnv: process.env.NODE_ENV || 'not set'
+      }
+    });
   }
 };

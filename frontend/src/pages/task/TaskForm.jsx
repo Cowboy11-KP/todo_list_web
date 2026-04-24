@@ -38,11 +38,12 @@ const TaskForm = () => {
   // ── Handlers ─────────────────────────────────────────────────
   useEffect(() => {
     if (isEditing && tasks.length > 0) {
-      const t = tasks.find(x => x.id === id);
+      const t = tasks.find(x => String(x.id) === String(id));
       if (t) {
         setTitle(t.title || '');
         setDescription(t.description || '');
-        setDate(t.due_date || '');
+        // Cắt lấy YYYY-MM-DD từ ISO string
+        setDate(t.due_date ? t.due_date.split('T')[0] : '');
         setTime(t.due_time || '');
         setPriority(t.priority || 'medium');
         setProject(t.project || PROJECTS[0]);

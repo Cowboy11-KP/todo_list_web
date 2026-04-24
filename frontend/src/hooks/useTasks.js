@@ -64,20 +64,20 @@ const useTasks = () => {
   const updateTask = useCallback(async (id, changes) => {
     try {
       const updated = await taskService.update(id, changes);
-      setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
+      setTasks((prev) => prev.map((t) => (String(t.id) === String(id) ? updated : t)));
       return updated;
     } catch (err) {
       setError(err.message);
       throw err;
     }
-  }, []);
+  }, [tasks]);
 
   const toggleTask = useCallback(async (id) => {
     // Optimistic update — đổi ngay trên UI, rollback nếu server lỗi
     setTasks((prev) =>
       prev.map((t) =>
-        t.id === id
-          ? { ...t, completed: !t.completed, completedAt: !t.completed ? new Date().toISOString() : null }
+        String(t.id) === String(id)
+          ? { ...t, completed: !t.completed, completed_at: !t.completed ? new Date().toISOString() : null }
           : t
       )
     );
@@ -85,23 +85,23 @@ const useTasks = () => {
       const task = tasks.find(t => String(t.id) === String(id));
       if (!task) return;
       const updated = await taskService.toggle(id, !task.completed);
-      setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
+      setTasks((prev) => prev.map((t) => (String(t.id) === String(id) ? updated : t)));
     } catch (err) {
       setError(err.message);
       // Rollback
       setTasks((prev) =>
         prev.map((t) =>
-          t.id === id
-            ? { ...t, completed: !t.completed, completedAt: t.completed ? null : t.completedAt }
+          String(t.id) === String(id)
+            ? { ...t, completed: !t.completed, completed_at: t.completed ? null : t.completed_at }
             : t
         )
       );
     }
-  }, []);
+  }, [tasks]);
 
   const deleteTask = useCallback(async (id) => {
     const snapshot = tasks;
-    setTasks((prev) => prev.filter((t) => t.id !== id)); // optimistic
+    setTasks((prev) => prev.filter((t) => String(t.id) !== String(id))); // optimistic
     try {
       await taskService.remove(id);
     } catch (err) {

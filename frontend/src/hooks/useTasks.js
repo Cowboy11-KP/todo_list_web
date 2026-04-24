@@ -141,13 +141,6 @@ const useTasks = () => {
       return (a.due_time || '99:99').localeCompare(b.due_time || '99:99');
     });
 
-  console.log('DEBUG - TODAY:', TODAY);
-  tasks.forEach(t => {
-    const datePart = t.due_date ? (t.due_date.includes('T') ? t.due_date.split('T')[0] : t.due_date) : 'no-date';
-    console.log(`Task ID: ${t.id}, Title: ${t.title}, Date: ${datePart}, Completed: ${t.completed}, IsUpcoming: ${datePart > TODAY && !t.completed}`);
-  });
-  console.log('DEBUG - Upcoming Tasks:', upcomingTasks);
-
   return {
     // State
     tasks,

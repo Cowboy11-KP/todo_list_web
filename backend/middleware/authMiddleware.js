@@ -18,6 +18,7 @@ module.exports = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
+    console.error("JWT Verify Error:", err.message);
     res.status(401).json({ message: 'Invalid token' });
   }
 };

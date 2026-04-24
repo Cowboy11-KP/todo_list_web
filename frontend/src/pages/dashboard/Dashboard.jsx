@@ -115,6 +115,8 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { todayTasks, upcomingTasks, todayStats, loading, error, toggleTask } = useTasks();
 
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const userName = user.name || 'User';
   const todayLabel = formatDateLabel(new Date().toISOString().split('T')[0]);
 
   return (
@@ -122,7 +124,7 @@ const Dashboard = () => {
       {/* ── Header ── */}
       <div className="dashboard__header">
         <div className="dashboard__date-label">{todayLabel}</div>
-        <h1 className="heading-xl">{greetingByHour()}, <em>Sarah.</em></h1>
+        <h1 className="heading-xl">{greetingByHour()}, <em>{userName}.</em></h1>
         <p className="dashboard__subtitle">
           {loading
             ? 'Loading your curated tasks…'

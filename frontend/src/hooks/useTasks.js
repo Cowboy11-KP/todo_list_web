@@ -141,6 +141,9 @@ const useTasks = () => {
       return (a.due_time || '99:99').localeCompare(b.due_time || '99:99');
     });
 
+  console.log('DEBUG - TODAY:', TODAY);
+  console.log('DEBUG - Upcoming Tasks:', upcomingTasks);
+
   return {
     // State
     tasks,

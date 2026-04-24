@@ -75,7 +75,7 @@ const TodayTaskCard = ({ task, onToggle, onClick }) => {
         onClick={() => onToggle(task.id)}
         aria-label={done ? 'Mark incomplete' : 'Mark complete'}
       >
-        {done && <CheckIcon />}
+        {!!done && <CheckIcon />}
       </button>
 
       <div className={`task-card__body ${done ? 'task-card__body--faded' : ''}`} onClick={onClick} style={{ cursor: 'pointer' }}>

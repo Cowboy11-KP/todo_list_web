@@ -129,8 +129,17 @@ const useTasks = () => {
 
   /** Tasks có dueDate > hôm nay, chưa hoàn thành, sort tăng dần theo ngày */
   const upcomingTasks = tasks
-    .filter((t) => t.due_date && (t.due_date.split('T')[0]) > TODAY && !t.completed)
-    .sort((a, b) => (a.due_date > b.due_date ? 1 : -1));
+    .filter((t) => {
+      if (!t.due_date || t.completed) return false;
+      const datePart = t.due_date.includes('T') ? t.due_date.split('T')[0] : t.due_date;
+      return datePart > TODAY;
+    })
+    .sort((a, b) => {
+      const dateA = a.due_date.includes('T') ? a.due_date.split('T')[0] : a.due_date;
+      const dateB = b.due_date.includes('T') ? b.due_date.split('T')[0] : b.due_date;
+      if (dateA !== dateB) return dateA > dateB ? 1 : -1;
+      return (a.due_time || '99:99').localeCompare(b.due_time || '99:99');
+    });
 
   return {
     // State

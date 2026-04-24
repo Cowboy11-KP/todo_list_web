@@ -108,7 +108,7 @@ const useTasks = () => {
   // ── Derived data ─────────────────────────────────────────────
 
   /** Tasks có dueDate = hôm nay */
-  const todayTasks = tasks.filter((t) => t.dueDate === TODAY);
+  const todayTasks = tasks.filter((t) => (t.due_date ? t.due_date.split('T')[0] : null) === TODAY);
 
   /** Stats cho hôm nay */
   const todayStats = {
@@ -119,8 +119,8 @@ const useTasks = () => {
 
   /** Tasks có dueDate > hôm nay, chưa hoàn thành, sort tăng dần theo ngày */
   const upcomingTasks = tasks
-    .filter((t) => t.dueDate && t.dueDate > TODAY && !t.completed)
-    .sort((a, b) => (a.dueDate > b.dueDate ? 1 : -1));
+    .filter((t) => t.due_date && (t.due_date.split('T')[0]) > TODAY && !t.completed)
+    .sort((a, b) => (a.due_date > b.due_date ? 1 : -1));
 
   return {
     // State

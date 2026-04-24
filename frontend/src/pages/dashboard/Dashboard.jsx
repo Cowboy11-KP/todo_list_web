@@ -95,8 +95,8 @@ const TodayTaskCard = ({ task, onToggle, onClick }) => {
               <span className={`pill ${PRIORITY_CLASS[task.priority]}`}>
                 {PRIORITY_LABEL[task.priority]}
               </span>
-              {task.dueTime && (
-                <span className="task-card__time">🕒 {formatTime(task.dueTime)}</span>
+              {task.due_time && (
+                <span className="task-card__time">🕒 {formatTime(task.due_time)}</span>
               )}
               {task.tags.slice(0, 2).map((tag) => (
                 <span key={tag} className="pill pill-neutral">{tag}</span>
@@ -159,7 +159,7 @@ const Dashboard = () => {
               {/* Active tasks first */}
               {todayTasks
                 .filter((t) => !t.completed)
-                .sort((a, b) => (a.dueTime ?? '99:99').localeCompare(b.dueTime ?? '99:99'))
+                .sort((a, b) => (a.due_time ?? '99:99').localeCompare(b.due_time ?? '99:99'))
                 .map((task) => (
                   <TodayTaskCard key={task.id} task={task} onToggle={toggleTask} onClick={() => navigate(`/tasks/${task.id}`)} />
                 ))}
@@ -205,7 +205,7 @@ const Dashboard = () => {
                 todayTasks.slice(0, 4).map((task, i) => (
                   <div key={task.id} className="timeline__item" style={{ cursor: 'pointer' }} onClick={() => navigate(`/tasks/${task.id}`)}>
                     <div className={`timeline__dot ${task.completed ? 'timeline__dot--muted' : ''}`} />
-                    <div className="timeline__date">{task.dueTime ? formatTime(task.dueTime) : 'All Day'}</div>
+                    <div className="timeline__date">{task.due_time ? formatTime(task.due_time) : 'All Day'}</div>
                     <div className="timeline__event-title" style={{ textDecoration: task.completed ? 'line-through' : 'none', color: task.completed ? 'var(--text-muted)' : 'inherit' }}>{task.title}</div>
                     <div className="timeline__event-sub">
                       {task.project}

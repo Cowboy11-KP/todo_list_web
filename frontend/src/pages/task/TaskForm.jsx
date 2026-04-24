@@ -42,8 +42,8 @@ const TaskForm = () => {
       if (t) {
         setTitle(t.title || '');
         setDescription(t.description || '');
-        setDate(t.dueDate || '');
-        setTime(t.dueTime || '');
+        setDate(t.due_date || '');
+        setTime(t.due_time || '');
         setPriority(t.priority || 'medium');
         setProject(t.project || PROJECTS[0]);
         setTags(t.tags || []);
@@ -52,7 +52,7 @@ const TaskForm = () => {
   }, [id, tasks, isEditing]);
 
   const handleSave = async () => {
-    const taskData = { title, description, dueDate: date, dueTime: time, priority, project, tags };
+    const taskData = { title, description, due_date: date, due_time: time, priority, project, tags };
     setStatus({ type: 'loading', message: 'Đang lưu...' });
     try {
       if (isEditing) {

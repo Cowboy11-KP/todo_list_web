@@ -27,7 +27,7 @@ const TaskDetail = () => {
   const navigate = useNavigate();
   const { tasks, loading, error, toggleTask, deleteTask } = useTasks();
 
-  const task = useMemo(() => tasks.find((t) => t.id === id), [tasks, id]);
+  const task = useMemo(() => tasks.find((t) => String(t.id) === String(id)), [tasks, id]);
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this task?')) {
@@ -104,7 +104,7 @@ const TaskDetail = () => {
         <div className="task-detail-section">
           <span className="section-label">Schedule</span>
           <p style={{ fontSize: '1.1rem', fontWeight: '500' }}>
-            📅 {formatDate(task.dueDate)} &nbsp; • &nbsp; 🕒 {formatTime(task.dueTime)}
+            📅 {formatDate(task.due_date)} &nbsp; • &nbsp; 🕒 {formatTime(task.due_time)}
           </p>
         </div>
 
@@ -131,9 +131,9 @@ const TaskDetail = () => {
         <div className="task-detail-section" style={{ borderTop: '1px solid var(--border-light)', paddingTop: '1.5rem', marginTop: '1rem' }}>
           <span className="section-label">System Metadata</span>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>ID: {task.id}</p>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Created: {new Date(task.createdAt).toLocaleString()}</p>
-          {task.completedAt && (
-             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Completed: {new Date(task.completedAt).toLocaleString()}</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Created: {new Date(task.created_at).toLocaleString()}</p>
+          {task.completed_at && (
+             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Completed: {new Date(task.completed_at).toLocaleString()}</p>
           )}
         </div>
       </div>

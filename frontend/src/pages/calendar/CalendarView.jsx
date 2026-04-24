@@ -100,19 +100,21 @@ const CalendarView = () => {
     const map = {};
     if (!tasks) return map;
     tasks.forEach(task => {
-      if (!task.dueDate) return;
-      if (!map[task.dueDate]) map[task.dueDate] = [];
-      map[task.dueDate].push(task);
+      if (!task.due_date) return;
+      const dateStr = task.due_date.includes('T') ? task.due_date.split('T')[0] : task.due_date;
+      if (!map[dateStr]) map[dateStr] = [];
+      map[dateStr].push(task);
     });
     return map;
   }, [tasks]);
 
   const selectedDateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
-  const selectedTasks = [...(tasksByDate[selectedDateStr] || [])].sort((a,b) => (a.dueTime || '99:99').localeCompare(b.dueTime || '99:99'));
+  const selectedTasks = [...(tasksByDate[selectedDateStr] || [])].sort((a,b) => (a.due_time || '99:99').localeCompare(b.due_time || '99:99'));
   
   const tasksThisMonth = useMemo(() => {
     if (!tasks) return 0;
-    return tasks.filter(t => !t.completed && t.dueDate && t.dueDate.startsWith(`${year}-${String(month+1).padStart(2,'0')}`)).length;
+    const monthStr = `${year}-${String(month+1).padStart(2,'0')}`;
+    return tasks.filter(t => !t.completed && t.due_date && t.due_date.startsWith(monthStr)).length;
   }, [tasks, year, month]);
 
   const sidebarLabels = formatDaySidebar(selectedDate);
@@ -217,7 +219,7 @@ const CalendarView = () => {
                 <div className="schedule-item" key={task.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/tasks/${task.id}`)}>
                   <div className={`schedule-dot ${task.completed ? 'faded' : ''}`} />
                   <div className="schedule-item-time">
-                    {task.dueTime ? task.dueTime : 'All Day'}
+                    {task.due_time ? task.due_time : 'All Day'}
                   </div>
                   <div className="schedule-item-title" style={{textDecoration: task.completed ? 'line-through' : 'none', color: task.completed ? 'var(--text-muted)' : 'inherited'}}>{task.title}</div>
                   

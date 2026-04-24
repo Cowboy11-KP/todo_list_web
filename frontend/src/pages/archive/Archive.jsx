@@ -7,7 +7,7 @@ const Archive = () => {
   const navigate = useNavigate();
   const { tasks, toggleTask } = useTasks();
 
-  const archivedTasks = tasks.filter(t => t.completed).sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+  const archivedTasks = tasks.filter(t => t.completed).sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at));
 
   const handleRestore = async (e, id) => {
     e.stopPropagation();
@@ -29,7 +29,7 @@ const Archive = () => {
                 <h3 className="archive-card-title">{task.title}</h3>
                 <div className="archive-card-meta">
                   {task.project && <span>📍 {task.project}</span>}
-                  <span>✅ Completed {new Date(task.completedAt).toLocaleDateString()}</span>
+                  <span>✅ Completed {new Date(task.completed_at).toLocaleDateString()}</span>
                 </div>
               </div>
               <button className="btn-secondary archive-restore-btn" onClick={(e) => handleRestore(e, task.id)}>

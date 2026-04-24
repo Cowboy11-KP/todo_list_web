@@ -14,7 +14,7 @@ module.exports = (req, res, next) => {
 
   try {
     // 4. Xác thực token đã được cắt sạch sẽ
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET.trim());
     req.user = decoded;
     next();
   } catch (err) {

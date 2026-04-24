@@ -15,7 +15,12 @@ import { useState, useEffect, useCallback } from 'react';
 import taskService from '../services/taskService';
 
 // ─── Date helper ───────────────────────────────────────────────────────────
-const toDateStr = (date) => date.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+const toDateStr = (date) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
 
 const TODAY = toDateStr(new Date());
 
@@ -108,7 +113,12 @@ const useTasks = () => {
   // ── Derived data ─────────────────────────────────────────────
 
   /** Tasks có dueDate = hôm nay */
-  const todayTasks = tasks.filter((t) => (t.due_date ? t.due_date.split('T')[0] : null) === TODAY);
+  /** Tasks có dueDate = hôm nay (so sánh chuỗi YYYY-MM-DD) */
+  const todayTasks = tasks.filter((t) => {
+    if (!t.due_date) return false;
+    const datePart = t.due_date.includes('T') ? t.due_date.split('T')[0] : t.due_date;
+    return datePart === TODAY;
+  });
 
   /** Stats cho hôm nay */
   const todayStats = {

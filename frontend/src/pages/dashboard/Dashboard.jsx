@@ -189,7 +189,7 @@ const Dashboard = () => {
           {/* Upcoming Card */}
           <div className="upcoming-card">
             <div className="upcoming-card__header">
-              <h3 className="upcoming-card__title">Today's Schedule</h3>
+              <h3 className="upcoming-card__title">Upcoming Schedule</h3>
               <Link to="/upcoming" className="upcoming-card__link">View calendar &gt;</Link>
             </div>
 
@@ -197,12 +197,12 @@ const Dashboard = () => {
               <div className="timeline__line" />
               {loading ? (
                 <LoadingState />
-              ) : todayTasks.length === 0 ? (
+              ) : upcomingTasks.length === 0 ? (
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                  No tasks scheduled today. 🎉
+                  No upcoming tasks. 🎉
                 </p>
               ) : (
-                todayTasks.slice(0, 4).map((task, i) => (
+                upcomingTasks.slice(0, 4).map((task, i) => (
                   <div key={task.id} className="timeline__item" style={{ cursor: 'pointer' }} onClick={() => navigate(`/tasks/${task.id}`)}>
                     <div className={`timeline__dot ${task.completed ? 'timeline__dot--muted' : ''}`} />
                     <div className="timeline__date">{task.due_time ? formatTime(task.due_time) : 'All Day'}</div>

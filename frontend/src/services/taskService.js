@@ -12,7 +12,7 @@ const fetchWithAuth = (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': token } : {}),
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     ...options.headers,
   };
   return fetch(`${BASE_URL}${endpoint}`, { ...options, headers }).then(handleResponse);

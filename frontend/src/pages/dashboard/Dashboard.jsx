@@ -143,7 +143,7 @@ const Dashboard = () => {
             <h2>Today</h2>
             {!loading && (
               <span className="pill pill-primary">
-                {todayStats.total - todayStats.done}/{todayStats.total} Tasks
+                <span className="task-count-badge">{todayStats.done}/{todayStats.total} TASKS</span>
               </span>
             )}
           </div>

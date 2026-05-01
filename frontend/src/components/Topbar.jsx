@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useTasks from '../hooks/useTasks';
+import useAuth from '../hooks/useAuth';
 
 const pageTitles = {
   '/dashboard': 'Lumina Task',
@@ -15,15 +16,22 @@ const Topbar = ({ onToggleSidebar }) => {
   const title = pageTitles[pathname] ?? 'Lumina Task';
 
   const { tasks } = useTasks();
+  const { currentUser, handleLogout } = useAuth();
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
   const wrapperRef = useRef(null);
+  const userDropdownRef = useRef(null);
 
   // Close dropdown on click outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         setShowDropdown(false);
+      }
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+        setShowUserDropdown(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -111,8 +119,29 @@ const Topbar = ({ onToggleSidebar }) => {
             <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.73 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
           </svg>
         </button>
-        <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fbdcb7', border: '2px solid white', cursor: 'pointer', overflow: 'hidden' }}>
-          <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Sarah&backgroundColor=transparent" alt="Avatar" width="100%" height="100%" />
+        <div style={{ position: 'relative' }} ref={userDropdownRef}>
+          <div 
+            style={{ width: 36, height: 36, borderRadius: '50%', background: '#fbdcb7', border: '2px solid white', cursor: 'pointer', overflow: 'hidden' }}
+            onClick={() => setShowUserDropdown(!showUserDropdown)}
+          >
+            <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${currentUser?.name || 'Sarah'}&backgroundColor=transparent`} alt="Avatar" width="100%" height="100%" />
+          </div>
+
+          {showUserDropdown && (
+            <div className="user-dropdown">
+              <div className="user-dropdown-header">
+                <div style={{ fontWeight: 600 }}>{currentUser?.name || 'My Account'}</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{currentUser?.email || 'user@example.com'}</div>
+              </div>
+              <div className="user-dropdown-divider"></div>
+              <div className="user-dropdown-item text-danger" onClick={() => {
+                setShowUserDropdown(false);
+                handleLogout();
+              }}>
+                <span style={{ marginRight: '0.5rem' }}>🚪</span> Đăng xuất
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>

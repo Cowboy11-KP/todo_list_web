@@ -53,21 +53,43 @@ const TaskForm = () => {
   }, [id, tasks, isEditing]);
 
   const handleSave = async () => {
+    // Validation based on DB schema
+    if (!title || title.trim() === '') {
+      setStatus({ type: 'error', message: 'Title is required.' });
+      return;
+    }
+    if (title.length > 255) {
+      setStatus({ type: 'error', message: 'Title cannot exceed 255 characters.' });
+      return;
+    }
+    if (project && project.length > 100) {
+      setStatus({ type: 'error', message: 'Project name cannot exceed 100 characters.' });
+      return;
+    }
+    if (!date) {
+      setStatus({ type: 'error', message: 'Due date is required.' });
+      return;
+    }
+    if (!time) {
+      setStatus({ type: 'error', message: 'Due time is required.' });
+      return;
+    }
+
     const taskData = { title, description, due_date: date, due_time: time, priority, project, tags };
-    setStatus({ type: 'loading', message: 'Đang lưu...' });
+    setStatus({ type: 'loading', message: 'Saving...' });
     try {
       if (isEditing) {
         await updateTask(id, taskData);
       } else {
         await createTask(taskData); 
       }
-      setStatus({ type: 'success', message: isEditing ? 'Cập nhật thành công!' : 'Tạo mới thành công!' });
+      setStatus({ type: 'success', message: isEditing ? 'Updated successfully!' : 'Created successfully!' });
       setTimeout(() => {
         navigate('/dashboard');
       }, 1500);
     } catch (err) {
-      console.error('Lỗi khi lưu task:', err);
-      setStatus({ type: 'error', message: err.message || 'Có lỗi xảy ra khi lưu task!' });
+      console.error('Error saving task:', err);
+      setStatus({ type: 'error', message: err.message || 'An error occurred while saving the task!' });
     }
   };
 

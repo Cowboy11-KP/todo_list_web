@@ -187,19 +187,28 @@ const TaskForm = () => {
                 </div>
               </div>
 
-              {/* Time — click icon ⏱️ mở time picker */}
+              {/* Time — click icon ⏱️ mở time picker hoặc nhập tay */}
               <div className="schedule-field">
-                <input
-                  ref={timeInputRef}
-                  type="time"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  tabIndex={-1}
-                />
-                <div className={`schedule-display ${time ? 'has-value' : ''}`}>
-                  <span>{formatTime(time)}</span>
+                <div className={`schedule-display ${time ? 'has-value' : ''}`} style={{ display: 'flex', alignItems: 'center' }}>
+                  <input
+                    ref={timeInputRef}
+                    type="time"
+                    value={time}
+                    onChange={(e) => setTime(e.target.value)}
+                    style={{ 
+                      border: 'none', 
+                      background: 'transparent', 
+                      outline: 'none', 
+                      color: 'inherit', 
+                      fontFamily: 'inherit', 
+                      fontSize: 'inherit', 
+                      fontWeight: 'inherit',
+                      flex: 1,
+                      padding: 0
+                    }}
+                  />
                   <span
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: 'pointer', marginLeft: '0.5rem' }}
                     onClick={() => timeInputRef.current?.showPicker?.()}
                   >⏱️</span>
                 </div>

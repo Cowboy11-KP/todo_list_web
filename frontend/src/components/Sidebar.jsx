@@ -7,11 +7,15 @@ const navItems = [
   { to: '/archive', icon: '📥', label: 'Archive' },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
   return (
-    <aside className="sidebar">
+    <>
+      {/* Sidebar Overlay for mobile */}
+      <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose}></div>
+      
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
       {/* Brand */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2.5rem' }}>
         <div style={{ width: 32, height: 32, background: 'var(--lumina-teal)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
@@ -59,6 +63,7 @@ const Sidebar = () => {
         <span style={{ fontSize: '1.2rem', fontWeight: 400 }}>+</span> New Task
       </button>
     </aside>
+    </>
   );
 };
 

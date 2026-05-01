@@ -9,7 +9,7 @@ const pageTitles = {
   '/archive': 'Archive'
 };
 
-const Topbar = () => {
+const Topbar = ({ onToggleSidebar }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const title = pageTitles[pathname] ?? 'Lumina Task';
@@ -45,12 +45,19 @@ const Topbar = () => {
 
   return (
     <header className="topbar">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', flex: 1 }}>
-        <div style={{ fontWeight: 700, fontSize: pathname === '/tasks/new' ? '1.5rem' : '1.25rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
+        <button className="btn-icon-nav sidebar-toggle" onClick={onToggleSidebar} style={{ padding: '0.5rem' }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div className="topbar-title" style={{ fontWeight: 700, fontSize: pathname === '/tasks/new' ? '1.5rem' : '1.25rem', whiteSpace: 'nowrap' }}>
           {title}
         </div>
 
-        <div className="search-wrapper" ref={wrapperRef} style={{ position: 'relative', width: '400px' }}>
+        <div className="search-wrapper" ref={wrapperRef} style={{ position: 'relative', width: '100%', maxWidth: '400px' }}>
           <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--lumina-teal)', pointerEvents: 'none' }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>

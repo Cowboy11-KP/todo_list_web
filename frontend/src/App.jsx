@@ -12,17 +12,21 @@ import Topbar from './components/Topbar';
 import './index.css';
 
 // Layout dùng chung cho các trang sau khi login
-const AppLayout = () => (
-  <div className="app-container">
-    <Sidebar />
-    <div className="main-wrapper">
-      <Topbar />
-      <main className="content-area">
-        <Outlet />
-      </main>
+const AppLayout = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
+  return (
+    <div className="app-container">
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <div className="main-wrapper">
+        <Topbar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+        <main className="content-area">
+          <Outlet />
+        </main>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 function App() {
   return (
